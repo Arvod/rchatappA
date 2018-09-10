@@ -46,7 +46,6 @@ public class GrabMessagesTask extends AsyncTask<Member, Void, String> {
         }catch(Exception e){
             e.printStackTrace();
             return "{\"status\":\"ERROR\",\"message\":\"Ошибка сети!\"}";
-
         }
     }
 

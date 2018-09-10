@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.retarcorp.rchatapp.Global;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -175,7 +174,6 @@ public class Site extends Object {
 
         public String getMessagesTouchURL() {
             return Site.this.protocol+"://"+Site.this.domain+"/Core/apps/RChat/app/Messages/Touch/?key="+Site.this.token;
-
         }
 
         public String getIconURL() {

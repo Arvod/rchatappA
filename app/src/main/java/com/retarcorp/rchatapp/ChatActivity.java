@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,11 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.retarcorp.rchatapp.Model.ChatMessage;
 import com.retarcorp.rchatapp.Model.Member;
@@ -35,12 +30,10 @@ import com.retarcorp.rchatapp.Net.MessageSentCallback;
 import com.retarcorp.rchatapp.Net.MessagesGrabCallback;
 import com.retarcorp.rchatapp.Net.MessagesWatchTask;
 import com.retarcorp.rchatapp.Net.SendMessageTask;
-import com.retarcorp.rchatapp.UI.MessageAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,13 +42,15 @@ import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity implements MessagesGrabCallback, MessageSentCallback, MemberReceiveCallback {
 
+    private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         setTitle("Диалог на "+Global.CurrentSite.getTitle());
 
-        int id = getIntent().getIntExtra("member_id", 0);
+        id = getIntent().getIntExtra("member_id", 0);
         if(id==0) {
             longSnack("Не удалось получить данные пользователя!");
         }else{
@@ -234,10 +229,26 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.menu_properties){
             (new MemberInfoReceiveTask(Global.CurrentSite,this)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,Global.CurrentMember);
-
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(!SiteMembersActivity.isIsInBackground()) {
+            Intent intent = new Intent(Global.Ctx, SiteMembersActivity.class);
+            intent.putExtra("site_id", Global.CurrentSite.getId());
+            startActivityForResult(intent, 0);
+        }
+        this.finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void showMemberInfo(String pagehref, String lastonline, String last_ip, String last_city){

@@ -1,11 +1,10 @@
 package com.retarcorp.rchatapp;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
@@ -19,18 +18,15 @@ import com.retarcorp.rchatapp.UI.MemberAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import javax.microedition.khronos.opengles.GL;
 
 public class SiteMembersActivity extends AppCompatActivity implements MemberGrabCallback, ConnectivityCallback{
 
-    private int currentId = 0;
+    private static boolean isInBackground;
     private Site currentSite = null;
+//    DBMembers dbHelper;
+//    SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +53,8 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
         ((ListView)findViewById(R.id.members_list)).setAdapter(adapter);
         checkConnectivity();
 
+
+
     }
 
     private Snackbar connectivitySnackbar = null;
@@ -77,7 +75,6 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
     }
 
     private void launchMembersWatch(){
-
         task = new MembersWatchTask(this,3000);
         task.execute(Global.CurrentSite);
     }
@@ -87,6 +84,7 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
     @Override
     public void onResume(){
         super.onResume();
+        isInBackground = false;
         Global.CurrentMember = null;
         launchMembersWatch();
 
@@ -96,6 +94,7 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
     @Override
     public void onPause(){
         super.onPause();
+        isInBackground = true;
         task.cancel(true);
     }
 
@@ -115,6 +114,7 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
 
             if(status.equals("OK")){
                 //Toast.makeText(this,"Ура!",Toast.LENGTH_SHORT).show();
+
                 members = new ArrayList<>();
                 JSONArray array = jsonObj.getJSONArray("data");
                 int len = array.length();
@@ -124,14 +124,12 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
                     m.last_city = obj.getString("last_city");
                     m.last_ip = obj.getString("last_ip");
                     m.last_message = obj.getString("last_message");
-                    m.last_online = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(obj.getString("lastonline"));
                     m.pagehref = obj.getString("pagehref");
                     m.ssid = obj.getString("ssid");
                     m.messages = obj.getInt("messages");
                     m.unread = obj.getInt("unread");
                     members.add(m);
                 }
-
                 adapter.clear();
                 adapter.addAll(members);
 
@@ -149,6 +147,7 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
         }
     }
 
+
     public void longSnack(String msg){
         Snackbar.make(findViewById(R.id.members_layout),msg,Snackbar.LENGTH_LONG).show();
     }
@@ -162,5 +161,9 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
         }else{
             Snackbar.make(findViewById(R.id.members_layout),"Не удалось подключиться к сайту!",Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    public static boolean isIsInBackground() {
+        return isInBackground;
     }
 }

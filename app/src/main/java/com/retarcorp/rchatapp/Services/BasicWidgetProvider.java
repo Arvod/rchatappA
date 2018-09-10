@@ -1,19 +1,13 @@
 package com.retarcorp.rchatapp.Services;
 
 import android.app.PendingIntent;
-import android.app.WallpaperManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.retarcorp.rchatapp.MainActivity;
 import com.retarcorp.rchatapp.R;
 
 import java.util.Random;
@@ -39,7 +33,7 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context){
         super.onEnabled(context);
-        //Toast.makeText(context, "onEnabled",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "onEnabled",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -68,14 +62,13 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context ctx, Intent intent){
         super.onReceive(ctx, intent);
 
-        Toast.makeText(ctx, "intent received: "+intent.getAction(),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ctx, "intent received: "+intent.getAction(),Toast.LENGTH_SHORT).show();
         if("REFRESH".equals(intent.getAction())) {
             AppWidgetManager manager = AppWidgetManager.getInstance(ctx);
             RemoteViews views = new RemoteViews(ctx.getPackageName(),R.layout.widget_layout);
             ComponentName widget = new ComponentName(ctx, BasicWidgetProvider.class);
             Random rnd = new Random();
             String pos = rnd.nextInt(100000000)+99999999+"";
-
             views.setTextViewText(R.id.widget_text,pos);
             manager.updateAppWidget(widget, views);
 
