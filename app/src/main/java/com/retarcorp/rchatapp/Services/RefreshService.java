@@ -8,23 +8,23 @@ import android.support.annotation.Nullable;
 
 import com.retarcorp.rchatapp.ChatActivity;
 import com.retarcorp.rchatapp.Global;
+import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
 import com.retarcorp.rchatapp.Net.MessageTouchTask;
 import com.retarcorp.rchatapp.Utils.Notifier;
 
 import java.util.List;
-
 /**
  * Created by CaptainOsmant on 13.01.2018.
  */
 
-public class RefreshService extends Service implements MessageReceiver, SiteProducer{
+public class RefreshService extends Service implements MessageReceiver, SiteProducer {
 
     @Override
     public void onCreate(){
         super.onCreate();
         this.task = new MessageTouchTask(this, this);
-        this.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 2000);
+        this.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1000);
 
         if(Global.Ctx == null){
             Global.Ctx = this;
@@ -46,9 +46,6 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
         int siteId = 0;
         String text = null;
         int userId = 0;
-
-//        Toast.makeText(Global.Ctx,"!",Toast.LENGTH_SHORT).show();
-
         for(MessageTick tick: messages){
             if(tick == null){
                 continue;
@@ -72,19 +69,20 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
                 userId = tick.uid;
             }
         }
-
         if(siteId > 0){
             if(Global.Ctx == null){
                 Global.Ctx = this;
             }
+            if (Global.CurrentSite == null) {
+                Global.CurrentSite = touch().get(0);
+            }
             Intent intent = new Intent();
-            try{
-                currentSite = new Site(siteId);
-                Global.CurrentSite = currentSite;
-            }catch(Site.SiteNotFoundException ignored){ }
+            currentSite = new Site(siteId);
+            Global.CurrentSite = currentSite;
             intent.setClass(this, ChatActivity.class);
             intent.putExtra("member_id", userId);
-            Notifier.notify("Новое сообщение с сайта "+site,text,intent);
+            Global.CurrentMember = new Member(userId);
+            Notifier.notify(userId + "Новое сообщение с сайта " + site, text, intent);
         }
     }
 

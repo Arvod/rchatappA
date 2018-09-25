@@ -1,6 +1,5 @@
 package com.retarcorp.rchatapp.Model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -26,5 +25,9 @@ public class Member {
 
     public int getId() {
         return id;
+    }
+
+    public String getLast_message() {
+        return last_message;
     }
 }

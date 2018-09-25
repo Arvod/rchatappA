@@ -22,4 +22,15 @@ public class ChatMessage {
         MEMBER, ADMIN
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
 }

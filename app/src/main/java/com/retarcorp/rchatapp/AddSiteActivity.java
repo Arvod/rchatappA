@@ -20,7 +20,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_site);
         setTitle("Добавить сайт");
-
         findViewById(R.id.addsitebtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,19 +37,13 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
         String[] protocols = getResources().getStringArray(R.array.protocols);
         String protocol = protocols[spinner.getSelectedItemPosition()];
 
-
-
         if(Site.isSiteAlreadyExists(protocol,domain)){
             Snackbar.make(findViewById(R.id.addsitebtn),"Невозможно добавить сайт "+protocol+"://"+domain+"! Сайт уже существует.",Snackbar.LENGTH_LONG).show();
             return;
         }
-
         snackbar = Snackbar.make(findViewById(R.id.addsitebtn),"Осуществляем прозвон...",Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
         checkConnectivity(protocol, domain, key);
-
-
-
     }
 
     public void checkConnectivity(String protocol, String domain, String key){
@@ -58,7 +51,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
     }
 
     public void onConnectivityChecked(String protocol,String domain, String key, boolean result){
-
         snackbar.dismiss();
         if(!result){
             Snackbar.make(findViewById(
@@ -67,13 +59,11 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
                     ,Snackbar.LENGTH_LONG).show();
             return;
         }
-
         try {
             Site site = Site.createSite(protocol, domain, key);
             new SiteIconDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, site);
         }catch (Site.SiteAlreadyExistsException e){
             Snackbar.make(findViewById(R.id.addsitebtn),"Невозможно добавить сайт "+protocol+"://"+domain+"! Сайт уже существует.",Snackbar.LENGTH_LONG).show();
-
         }catch (Exception e) {
             Snackbar.make(findViewById(R.id.addsitebtn), "Unable to create site " + protocol + "://" + domain + " with key " + key + ".", Snackbar.LENGTH_LONG).show();
             e.printStackTrace();
@@ -83,7 +73,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
     }
 
     public void onSiteAddedSuccessfully(){
-
         Snackbar.make(findViewById(R.id.addsitebtn),"Сайт успешно добавлен!",Snackbar.LENGTH_LONG).show();
     }
 }

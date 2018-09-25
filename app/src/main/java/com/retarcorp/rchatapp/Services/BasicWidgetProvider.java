@@ -21,25 +21,21 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] widgetIds){
         super.onDeleted(context, widgetIds);
-        //Toast.makeText(context, "onDeleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDisabled(Context ctx){
         super.onDisabled(ctx);
-        //Toast.makeText(ctx, "onDisabled", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEnabled(Context context){
         super.onEnabled(context);
-//        Toast.makeText(context, "onEnabled",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] widgetIds){
        super.onUpdate(context, manager, widgetIds);
-        //Toast.makeText(context,"onUpdate",Toast.LENGTH_SHORT).show();
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
         Random rnd = new Random();
         views.setTextViewText(R.id.widget_text, rnd.nextInt(100000000)+99999999+"");
@@ -54,15 +50,11 @@ public class BasicWidgetProvider extends AppWidgetProvider {
             views.setOnClickFillInIntent(R.id.widget_layout,intent);
             manager.updateAppWidget(id,views);
         }
-        //manager.updateAppWidget(widgetIds, views);
-
     }
 
     @Override
     public void onReceive(Context ctx, Intent intent){
         super.onReceive(ctx, intent);
-
-//        Toast.makeText(ctx, "intent received: "+intent.getAction(),Toast.LENGTH_SHORT).show();
         if("REFRESH".equals(intent.getAction())) {
             AppWidgetManager manager = AppWidgetManager.getInstance(ctx);
             RemoteViews views = new RemoteViews(ctx.getPackageName(),R.layout.widget_layout);

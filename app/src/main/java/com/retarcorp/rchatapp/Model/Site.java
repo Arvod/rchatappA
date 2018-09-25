@@ -55,12 +55,9 @@ public class Site extends Object {
         }
     }
 
-    public Site(int id) throws SiteNotFoundException{
+    public Site(int id) {
         DBConnection db = new DBConnection(Global.Ctx);
         Cursor c = db.getReadableDatabase().query("sites",null,"_id=?",new String[]{id+""},null,null,null,null);
-        if(c.getCount() == 0 ){
-            throw new SiteNotFoundException("No site with given ID found!");
-        }
         c.moveToFirst();
         this.id = c.getInt(0);
         this.protocol = c.getString(1);
@@ -140,11 +137,7 @@ public class Site extends Object {
         c.moveToFirst();
         if(c.getCount()>0){
             do{
-                try {
-                    sites.add(new Site(c.getInt(0)));
-                }catch (SiteNotFoundException e){
-                    continue;
-                }
+                sites.add(new Site(c.getInt(0)));
             }while(c.moveToNext());
         }
         c.close();

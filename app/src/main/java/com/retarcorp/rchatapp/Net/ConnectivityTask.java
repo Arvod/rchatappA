@@ -30,7 +30,6 @@ public class ConnectivityTask extends AsyncTask<String, Void, Boolean> {
         this.protocol = params[0];
         this.domain = params[1];
         this.key = params[2];
-
         String url = Site.getConnectivityCheckerPath(protocol, domain, key);
 
         try {
@@ -38,22 +37,17 @@ public class ConnectivityTask extends AsyncTask<String, Void, Boolean> {
             HttpURLConnection connection = (HttpURLConnection)Url.openConnection();
             connection.setInstanceFollowRedirects(true);
             connection.connect();
-
             InputStream is = connection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String res = reader.readLine();
-
             System.out.println(res);
             if(res.trim().equals("OK")){
                 return true;
             }
-
         }catch (Exception e){
             e.printStackTrace();
             return false;
         }
-
-
         return false;
     }
 

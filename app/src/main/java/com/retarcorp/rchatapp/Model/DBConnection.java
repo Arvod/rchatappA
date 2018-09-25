@@ -30,6 +30,7 @@ public class DBConnection  extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE sites;");
+
         this.onCreate(db);
     }
 }

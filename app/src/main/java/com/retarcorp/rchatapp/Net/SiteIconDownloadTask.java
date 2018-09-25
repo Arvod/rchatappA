@@ -15,8 +15,7 @@ import java.io.ByteArrayOutputStream;
 
 public class SiteIconDownloadTask extends AsyncTask<Site,Void,Site> {
 
-    public SiteIconDownloadTask(){
-
+    public SiteIconDownloadTask() {
     }
 
     @Override
@@ -24,11 +23,10 @@ public class SiteIconDownloadTask extends AsyncTask<Site,Void,Site> {
         Site site = params[0];
         try {
             Bitmap bmp = Downloader.downloadBitmap(site.api.getIconURL());
-            ByteArrayOutputStream os=  new ByteArrayOutputStream();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
             String icon = Base64.encodeToString(os.toByteArray(), Base64.DEFAULT);
             site.icon = icon;
-
         }catch (Exception e){
             e.printStackTrace();
         }
