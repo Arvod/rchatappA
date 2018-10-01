@@ -69,7 +69,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
             e.printStackTrace();
         }
         this.onSiteAddedSuccessfully();
-
     }
 
     public void onSiteAddedSuccessfully(){

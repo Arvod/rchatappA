@@ -24,7 +24,7 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
     public void onCreate(){
         super.onCreate();
         this.task = new MessageTouchTask(this, this);
-        this.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1000);
+        this.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1500);
 
         if(Global.Ctx == null){
             Global.Ctx = this;
@@ -82,7 +82,7 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
             intent.setClass(this, ChatActivity.class);
             intent.putExtra("member_id", userId);
             Global.CurrentMember = new Member(userId);
-            Notifier.notify(userId + "Новое сообщение с сайта " + site, text, intent);
+            Notifier.notify("Новое сообщение с сайта " + site, text, intent);
         }
     }
 

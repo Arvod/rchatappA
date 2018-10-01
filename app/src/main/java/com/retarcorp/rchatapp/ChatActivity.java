@@ -1,5 +1,6 @@
 package com.retarcorp.rchatapp;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -59,6 +60,13 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
         Global.CurrentMember = new Member(id);
         dbHelper = new DBMembers(Global.Ctx);
         onCreateHashMessages();
+
+        db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("unread", 0);
+
+        db.update("members", cv, "id" + " = ?", new String[]{String.valueOf(id)});
+        db.close();
 
         findViewById(R.id.send_message).setOnClickListener(new View.OnClickListener() {
             @Override

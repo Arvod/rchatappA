@@ -43,11 +43,11 @@ public class MessageTouchTask extends AsyncTask<Integer, String, String> {
     private List<Site> sites;
     @Override
     protected String doInBackground(Integer... params) {
-        try {
-            do{
+        do {
+            try {
                 siteDB = producer.touch().get(0);
-                Thread.sleep(params[0]);
                 sites = producer.touch();
+//                siteDB = sites.get(0);
                 String[] messages = new String[params.length];
                 for (int i = 0; i < params.length; i++) {
                     Site site = sites.get(i);
@@ -62,9 +62,9 @@ public class MessageTouchTask extends AsyncTask<Integer, String, String> {
                             builder.append(s);
                         }
                         reader.close();
-                        messages[i]=builder.toString();
+                        messages[i] = builder.toString();
                     } catch (Exception e) {
-                        messages[i] = "{\"status\":\"ERROR\",\"message\":\""+e.getMessage()+"\"}";
+                        messages[i] = "{\"status\":\"ERROR\",\"message\":\"" + e.getMessage() + "\"}";
                         e.printStackTrace();
                         continue;
                     }
@@ -95,7 +95,7 @@ public class MessageTouchTask extends AsyncTask<Integer, String, String> {
                                 if (mCursor.getCount() == 0) {
                                     db.insert("members", null, getMembersValues(obj));
                                     addMessagesOfId(obj.getInt("id"));
-                                } else if (!mCursor.getString(7).equals(obj.getString("last_message")) || mCursor.getInt(6) != (obj.getInt("unread"))) {
+                                } else if (!mCursor.getString(7).equals(obj.getString("last_message"))) {
                                     db.update("members", getMembersValues(obj), "id" + " = ?", new String[]{String.valueOf(obj.getInt("id"))});
                                     addMessagesOfId(obj.getInt("id"));
                                 }
@@ -109,10 +109,10 @@ public class MessageTouchTask extends AsyncTask<Integer, String, String> {
                     e.printStackTrace();
                 }
                 publishProgress(messages);
-            }while(true);
-        }catch (Exception e){
-            return null;
-        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } while (true);
     }
 
     @Override
@@ -143,7 +143,6 @@ public class MessageTouchTask extends AsyncTask<Integer, String, String> {
             if (status.trim().equals("OK")) {
                 JSONArray array = jsonObj.getJSONArray("data");
                 int len = array.length();
-                Cursor mCursor = db.query("messages", null, "uid" + " = ?", new String[]{String.valueOf(id)}, null, null, null);
                 db.delete("messages", "uid=?", new String[]{"" + id});
                 addMessagesToDB(len, array);
             }

@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
         Global.Ctx = getApplicationContext();
         setContentView(R.layout.activity_main);
         setTitle("Мои сайты");
-
-        startService(new Intent(this, RefreshService.class));
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,8 +42,15 @@ public class MainActivity extends AppCompatActivity {
         SiteAdapter adapter = new SiteAdapter(this, Site.getSites());
         Global.CurrentSite = null;
         Global.CurrentMember = null;
-
         listView.setAdapter(adapter);
+        if (Site.getSites().size() != 0) {
+            startService(new Intent(MainActivity.this, RefreshService.class));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
