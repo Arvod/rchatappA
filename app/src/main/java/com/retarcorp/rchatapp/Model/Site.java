@@ -23,14 +23,6 @@ public class Site extends Object {
         return id;
     }
 
-
-
-
-    public class Protocol{
-        public static final String HTTP = "http";
-        public static final String HTTPS = "https";
-    }
-
     public String protocol;
     public String domain;
     public String token;
@@ -43,20 +35,17 @@ public class Site extends Object {
         return protocol.toLowerCase()+"://"+domain;
     }
 
-    public static class SiteNotFoundException extends Exception{
-        SiteNotFoundException(String s){
-            super(s);
-        }
-    }
-
     public static class SiteAlreadyExistsException extends Exception{
         SiteAlreadyExistsException(String s){
             super(s);
         }
     }
 
+    public Site() {
+    }
+
     public Site(int id) {
-        DBConnection db = new DBConnection(Global.Ctx);
+        DBHelper db = new DBHelper(Global.Ctx);
         Cursor c = db.getReadableDatabase().query("sites",null,"_id=?",new String[]{id+""},null,null,null,null);
         c.moveToFirst();
         this.id = c.getInt(0);
@@ -64,11 +53,6 @@ public class Site extends Object {
         this.domain = c.getString(2);
         this.token = c.getString(3);
         this.dialogs = c.getInt(4);
-
-        String dateStr = c.getString(5);
-        if(dateStr == null){
-            dateStr = "";
-        }
         this.last_connection = new Date();
         this.icon = c.getString(6);
         this.mid = c.getInt(7);
@@ -76,7 +60,7 @@ public class Site extends Object {
     }
 
     public void update() {
-        DBConnection db = new DBConnection(Global.Ctx);
+        DBHelper db = new DBHelper(Global.Ctx);
         ContentValues cv = new ContentValues();
         cv.put("token", this.token);
         cv.put("mid",this.mid);
@@ -87,7 +71,7 @@ public class Site extends Object {
     }
 
     public static boolean isSiteAlreadyExists(String protocol, String domain){
-        DBConnection db = new DBConnection(Global.Ctx);
+        DBHelper db = new DBHelper(Global.Ctx);
         Cursor c = db.getReadableDatabase().query(
                 "sites"
                 ,null
@@ -110,7 +94,7 @@ public class Site extends Object {
             throw new SiteAlreadyExistsException("Site already exists!");
         }
 
-        DBConnection db = new DBConnection(Global.Ctx);
+        DBHelper db = new DBHelper(Global.Ctx);
         ContentValues cv = new ContentValues();
         cv.put("protocol", protocol);
         cv.put("domain", domain);
@@ -131,7 +115,7 @@ public class Site extends Object {
     }
 
     public static ArrayList<Site> getSites() {
-        DBConnection db = new DBConnection(Global.Ctx);
+        DBHelper db = new DBHelper(Global.Ctx);
         Cursor c = db.getReadableDatabase().query("sites",null,null,null,null,null,null);
         ArrayList<Site> sites = new ArrayList<>();
         c.moveToFirst();

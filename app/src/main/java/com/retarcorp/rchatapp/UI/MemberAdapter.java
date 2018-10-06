@@ -41,7 +41,6 @@ public class MemberAdapter extends ArrayAdapter<Member> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ChatActivity.class);
-
                 intent.putExtra("member_id", m.getId());
                 getContext().startActivity(intent);
             }

@@ -29,8 +29,4 @@ public class ChatMessage {
     public Date getCreated() {
         return created;
     }
-
-    public Direction getDirection() {
-        return direction;
-    }
 }

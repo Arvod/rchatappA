@@ -30,7 +30,6 @@ public class SiteAdapter extends ArrayAdapter<Site> {
         super(context, R.layout.site_adapter_element, sites);
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         final Site site = getItem(position);

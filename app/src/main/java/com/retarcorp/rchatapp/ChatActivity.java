@@ -1,10 +1,7 @@
 package com.retarcorp.rchatapp;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,7 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.retarcorp.rchatapp.Model.ChatMessage;
-import com.retarcorp.rchatapp.Model.DBMembers;
+import com.retarcorp.rchatapp.Model.DBConnector;
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Net.GrabMessagesTask;
 import com.retarcorp.rchatapp.Net.MessageSentCallback;
@@ -32,19 +29,13 @@ import com.retarcorp.rchatapp.Net.MessagesGrabCallback;
 import com.retarcorp.rchatapp.Net.MessagesWatchTask;
 import com.retarcorp.rchatapp.Net.SendMessageTask;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class ChatActivity extends AppCompatActivity implements MessagesGrabCallback, MessageSentCallback {
 
     private int id;
     private ArrayList<ChatMessage> messages = new ArrayList<>();
-    private DBMembers dbHelper;
-    private SQLiteDatabase db;
+    private DBConnector dbConnector;
 
     private MessagesWatchTask task;
 
@@ -58,15 +49,10 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
             setTitle("Диалог на " + Global.CurrentSite.getTitle());
         }
         Global.CurrentMember = new Member(id);
-        dbHelper = new DBMembers(Global.Ctx);
-        onCreateHashMessages();
-
-        db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("unread", 0);
-
-        db.update("members", cv, "id" + " = ?", new String[]{String.valueOf(id)});
-        db.close();
+        dbConnector = new DBConnector();
+        messages = dbConnector.getMessages(id);
+        rebuildMessageList(messages);
+        dbConnector.setMessagesRead(id);
 
         findViewById(R.id.send_message).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,17 +99,11 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
 
     @Override
     public void onMessagesGrabbed(String json) {
-        try {
-            db = dbHelper.getReadableDatabase();
-            Cursor mCursor = db.query("messages", new String[]{"uid"}, "uid" + " = ?", new String[]{String.valueOf(id)}, null, null, null);
-            if (messages.size() != mCursor.getCount()) {
-                onCreateHashMessages();
-                scrollMessageList();
-            }
-            mCursor.close();
-            db.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        ArrayList<ChatMessage> chatMessages = dbConnector.getMessages(id);
+        if (messages.size() != chatMessages.size()) {
+            messages = chatMessages;
+            rebuildMessageList(messages);
+            scrollMessageList();
         }
     }
 
@@ -178,15 +158,13 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_properties:
-                db = dbHelper.getWritableDatabase();
-                Cursor mCursor = db.query("members", new String[]{"pagehref ", "last_city", "last_ip", "lastonline"}, "id" + " = ?", new String[]{String.valueOf(id)}, null, null, null);
-                mCursor.moveToFirst();
+                Member member = dbConnector.getMember(id);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 View v = LayoutInflater.from(this).inflate(R.layout.member_properties, null);
-                ((TextView) v.findViewById(R.id.member_props_pagehref)).setText(mCursor.getString(0));
-                ((TextView) v.findViewById(R.id.member_props_last_city)).setText(mCursor.getString(1));
-                ((TextView) v.findViewById(R.id.member_props_last_ip)).setText(mCursor.getString(2));
-                ((TextView) v.findViewById(R.id.member_props_last_online)).setText(mCursor.getString(3));
+                ((TextView) v.findViewById(R.id.member_props_pagehref)).setText(member.pagehref);
+                ((TextView) v.findViewById(R.id.member_props_last_city)).setText(member.last_city);
+                ((TextView) v.findViewById(R.id.member_props_last_ip)).setText(member.last_ip);
+                ((TextView) v.findViewById(R.id.member_props_last_online)).setText(member.messages);
 
                 v.findViewById(R.id.member_props_pagehref).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -227,31 +205,6 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    public void onCreateHashMessages() {
-        messages = new ArrayList<>();
-        db = dbHelper.getReadableDatabase();
-        Cursor mCursor = db.query("messages", null, "uid" + " = ?", new String[]{String.valueOf(id)}, null, null, null);
-        mCursor.moveToFirst();
-        if (mCursor.getCount() != 0) {
-            for (int i = 0; i < mCursor.getCount(); i++) {
-                ChatMessage.Direction direction = mCursor.getInt(1) == 1 ? ChatMessage.Direction.MEMBER : ChatMessage.Direction.ADMIN;
-                Date created = new Date();
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-                try {
-                    created = format.parse(mCursor.getString(2));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    created = null;
-                }
-                ChatMessage m = new ChatMessage(mCursor.getString(3), created, direction);
-                messages.add(m);
-                mCursor.moveToNext();
-            }
-        }
-        mCursor.close();
-        rebuildMessageList(messages);
     }
 }
 

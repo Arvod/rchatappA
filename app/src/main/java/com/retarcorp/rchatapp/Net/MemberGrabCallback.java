@@ -5,6 +5,5 @@ package com.retarcorp.rchatapp.Net;
  */
 
 public interface MemberGrabCallback {
-
-    public void onMembersJSONGrabbed(String json);
+    void onMembersJSONGrabbed(String json);
 }

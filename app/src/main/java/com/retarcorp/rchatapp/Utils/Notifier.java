@@ -12,16 +12,13 @@ import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.R;
 import com.retarcorp.rchatapp.Services.SendMessageService;
 
-//import android.app.RemoteInput;
-//import android.support.v7.app.NotificationCompat;
-
 /**
  * Created by CaptainOsmant on 13.01.2018.
  */
 
 public class Notifier {
 
-    public static void notify(String title, String text, Intent intent){
+    public static void notify(String title, String text, Intent intent) {
 
         PendingIntent pi = PendingIntent.getActivity(Global.Ctx.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager mgr = (NotificationManager) Global.Ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -48,17 +45,17 @@ public class Notifier {
                     PendingIntent.getService(Global.Ctx,
                             0, intentService, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Action replyAction = new Notification.Action.Builder(
-                android.R.drawable.ic_menu_save, "Ответить", replyPendingIntent)
-                .addRemoteInput(remoteInput)
-                .build();
+            Notification.Action replyAction = new Notification.Action.Builder(
+                    android.R.drawable.ic_menu_save, "Ответить", replyPendingIntent)
+                    .addRemoteInput(remoteInput)
+                    .build();
 
             builder.addAction(replyAction);
         }
 
         Notification lastNotification = builder.build();
 
-        lastNotification.vibrate = new long[]{600,450,300};
+        lastNotification.vibrate = new long[]{600, 450, 300};
         mgr.notify(1, lastNotification);
     }
 

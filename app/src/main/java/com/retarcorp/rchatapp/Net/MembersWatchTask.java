@@ -10,7 +10,6 @@ import com.retarcorp.rchatapp.Model.Site;
 
 public class MembersWatchTask extends AsyncTask<Site, String, String> {
     private final int delay;
-    private Site site;
     MemberGrabCallback callback;
 
     public MembersWatchTask( MemberGrabCallback callback, int delay){
@@ -20,27 +19,12 @@ public class MembersWatchTask extends AsyncTask<Site, String, String> {
 
     @Override
     protected String doInBackground(Site... params) {
-        this.site = params[0];
         do {
             try {
-//                URL url = new URL(site.api.getMembersURL());
-//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                connection.connect();
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                StringBuffer buffer = new StringBuffer();
-//                String s;
-//                while ((s = reader.readLine()) != null) {
-//                    buffer.append(s);
-//                }
-//                connection.disconnect();
-//                publishProgress(buffer.toString());
                 publishProgress("");
+                Thread.sleep(this.delay);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            try{
-                Thread.sleep(this.delay);
-            }catch (Exception e){
                 return ("{\"status\":\"ERROR\",\"message\":\"Ошибка на уровне Android-приложения\"}");
             }
         }while(true);

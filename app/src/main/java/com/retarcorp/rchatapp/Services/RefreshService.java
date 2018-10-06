@@ -10,7 +10,7 @@ import com.retarcorp.rchatapp.ChatActivity;
 import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
-import com.retarcorp.rchatapp.Net.MessageTouchTask;
+import com.retarcorp.rchatapp.Net.RefreshTask;
 import com.retarcorp.rchatapp.Utils.Notifier;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
     @Override
     public void onCreate(){
         super.onCreate();
-        this.task = new MessageTouchTask(this, this);
+        this.task = new RefreshTask(this, this);
         this.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1500);
 
         if(Global.Ctx == null){
@@ -31,7 +31,8 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
         }
 
     }
-    private MessageTouchTask task;
+
+    private RefreshTask task;
     private Site currentSite = null;
 
     @Override
@@ -72,9 +73,6 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
         if(siteId > 0){
             if(Global.Ctx == null){
                 Global.Ctx = this;
-            }
-            if (Global.CurrentSite == null) {
-                Global.CurrentSite = touch().get(0);
             }
             Intent intent = new Intent();
             currentSite = new Site(siteId);

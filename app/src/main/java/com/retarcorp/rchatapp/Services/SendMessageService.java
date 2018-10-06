@@ -13,6 +13,7 @@ import android.os.IBinder;
 
 import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.Net.MessageSentCallback;
+import com.retarcorp.rchatapp.Net.MessagesRefreshThread;
 import com.retarcorp.rchatapp.Net.SendMessageTask;
 
 public class SendMessageService extends Service implements MessageSentCallback {
@@ -31,7 +32,6 @@ public class SendMessageService extends Service implements MessageSentCallback {
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     public int onStartCommand(Intent intent, int flags, int startId) {
         if ("ACTION_REPLY".equals(intent.getAction())) {
-
             CharSequence replyText = null;
             Bundle results = RemoteInput.getResultsFromIntent(intent);
             if (results != null) {
@@ -39,6 +39,7 @@ public class SendMessageService extends Service implements MessageSentCallback {
             }
             (new SendMessageTask(Global.CurrentSite, Global.CurrentMember, this)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, String.valueOf(replyText));
         }
+        new MessagesRefreshThread(Global.CurrentMember.getId()).run();
         return START_NOT_STICKY;
     }
 

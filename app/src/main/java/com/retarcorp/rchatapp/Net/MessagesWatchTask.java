@@ -22,30 +22,12 @@ public class MessagesWatchTask extends AsyncTask<Member, String, String> {
 
     @Override
     protected String doInBackground(Member ...params) {
-//        Member member = params[0];
         do {
             try {
-//                URL url = new URL(site.api.getMessagesURL(member));
-//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                connection.connect();
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                StringBuilder builder = new StringBuilder();
-//                String s;
-//                while ((s = reader.readLine()) != null) {
-//                    builder.append(s);
-//                }
-//                connection.disconnect();
-//                reader.close();
-//                publishProgress(builder.toString());
                 publishProgress("");
+                Thread.sleep(this.delay);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            try{
-                Thread.sleep(this.delay);
-            }catch (Exception e){
-
                 return ("{\"status\":\"ERROR\",\"message\":\"Ошибка обновления сообщений!\"}");
             }
         }while(true);

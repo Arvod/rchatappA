@@ -19,15 +19,11 @@ public class Member {
     public String pagehref = "";
     public int unread = 0;
 
-    public Member(int id){
+    public Member(int id) {
         this.id = id;
     }
 
     public int getId() {
         return id;
-    }
-
-    public String getLast_message() {
-        return last_message;
     }
 }

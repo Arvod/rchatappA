@@ -63,7 +63,6 @@ public class BasicWidgetProvider extends AppWidgetProvider {
             String pos = rnd.nextInt(100000000)+99999999+"";
             views.setTextViewText(R.id.widget_text,pos);
             manager.updateAppWidget(widget, views);
-
         }
     }
 

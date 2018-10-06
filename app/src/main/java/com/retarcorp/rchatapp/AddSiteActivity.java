@@ -15,6 +15,8 @@ import com.retarcorp.rchatapp.Net.SiteIconDownloadTask;
 
 public class AddSiteActivity extends Activity implements ConnectivityCallback {
 
+    private Snackbar snackbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +30,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
         });
     }
 
-    private Snackbar snackbar;
     public void onAddSite(){
         String domain = ((EditText)findViewById(R.id.domain_name)).getText().toString();
         String key = ((EditText)findViewById(R.id.key)).getText().toString();

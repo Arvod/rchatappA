@@ -5,14 +5,23 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DBMembers extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
-    public DBMembers(Context ctx){
-        super(ctx, "rchatm", null, 1);
+    public DBHelper(Context ctx) {
+        super(ctx, "rchat", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE sites (" +
+                "_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT " +
+                ",protocol VARCHAR(100)" +
+                ",domain VARCHAR(256)" +
+                ",token VARCHAR(256) DEFAULT '' " +
+                ",dialogs INT DEFAULT 0" +
+                ",last_connection DATETIME" +
+                ",icon TEXT" +
+                ",mid INT DEFAULT 0)");
         db.execSQL("CREATE TABLE members (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT" +
                 ",ssid VARCHAR(256)" +
@@ -33,10 +42,12 @@ public class DBMembers extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE sites");
         db.execSQL("DROP TABLE members");
         db.execSQL("DROP TABLE messages");
         this.onCreate(db);
     }
+
 
     public boolean isEmpty(String TableName) {
         SQLiteDatabase database = this.getReadableDatabase();
