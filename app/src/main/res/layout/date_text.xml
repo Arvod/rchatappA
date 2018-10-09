@@ -3,18 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/message_layer"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp">
+    android:id="@+id/message_layer">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/message_text"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp" />
+        android:id="@+id/message_date"
+        android:textSize="8sp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:visibility="gone" />
+
 
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.retarcorp.rchatapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +32,7 @@ import com.retarcorp.rchatapp.Net.MessagesWatchTask;
 import com.retarcorp.rchatapp.Net.SendMessageTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity implements MessagesGrabCallback, MessageSentCallback {
 
@@ -112,19 +115,76 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
         layout.removeAllViews();
         for (ChatMessage m : messages) {
             View view = LayoutInflater.from(this).inflate(R.layout.message_layout, null);
-            ((TextView) view.findViewById(R.id.message_text)).setText(m.text);
+            final View viewDate = LayoutInflater.from(this).inflate(R.layout.date_text, null);
+            TextView message_text = ((TextView) view.findViewById(R.id.message_text));
+            message_text.setText(m.text);
+
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            final TextView dateText = ((TextView) viewDate.findViewById(R.id.message_date));
+            dateText.setText(getDifferenceBtwTime(m.created));
             if (m.direction == ChatMessage.Direction.ADMIN) {
                 lp.gravity = Gravity.RIGHT;
-                view.findViewById(R.id.message_text).setBackgroundColor(Color.parseColor("#1e824c"));
-                ((TextView) view.findViewById(R.id.message_text)).setTextColor(Color.parseColor("#ffffff"));
+                message_text.setBackgroundColor(Color.parseColor("#1e824c"));
+                message_text.setTextColor(Color.parseColor("#ffffff"));
+                dateText.setGravity(Gravity.RIGHT);
             } else {
-                view.findViewById(R.id.message_text).setBackgroundColor(Color.parseColor("#ccccff"));
+                message_text.setBackgroundColor(Color.parseColor("#ccccff"));
+                message_text.setTextColor(Color.parseColor("#000000"));
                 lp.gravity = Gravity.LEFT;
             }
+            message_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (dateText.getVisibility()) {
+                        case 8:
+                            showElements(dateText);
+                            break;
+                        case 0:
+                            hideElements(dateText);
+                            break;
+                    }
+                }
+            });
             view.findViewById(R.id.message_layer).setLayoutParams(lp);
+            viewDate.findViewById(R.id.message_layer).setLayoutParams(lp);
             layout.addView(view);
+            layout.addView(viewDate);
         }
+        View dateView = layout.getChildAt(layout.getChildCount() - 1);
+        TextView dateText = (TextView) dateView.findViewById(R.id.message_date);
+        showElements(dateText);
+    }
+
+    private void showElements(final TextView mHiddenLinearLayout) {
+        mHiddenLinearLayout.setVisibility(View.VISIBLE);
+        mHiddenLinearLayout.setAlpha(0.0f);
+        mHiddenLinearLayout
+                .animate()
+                .setDuration(500L)
+                .alpha(1.0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mHiddenLinearLayout.animate().setListener(null);
+                    }
+                })
+        ;
+    }
+
+    private void hideElements(final TextView mHiddenLinearLayout) {
+        mHiddenLinearLayout
+                .animate()
+                .setDuration(500L)
+                .alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mHiddenLinearLayout.setVisibility(View.GONE);
+                    }
+                })
+        ;
     }
 
     private void scrollMessageList() {
@@ -164,7 +224,7 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
                 ((TextView) v.findViewById(R.id.member_props_pagehref)).setText(member.pagehref);
                 ((TextView) v.findViewById(R.id.member_props_last_city)).setText(member.last_city);
                 ((TextView) v.findViewById(R.id.member_props_last_ip)).setText(member.last_ip);
-                ((TextView) v.findViewById(R.id.member_props_last_online)).setText(member.messages);
+                ((TextView) v.findViewById(R.id.member_props_last_online)).setText(member.last_message);
 
                 v.findViewById(R.id.member_props_pagehref).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -205,6 +265,36 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public String getDifferenceBtwTime(Date dateTime) {
+
+        long timeDifferenceMilliseconds = new Date().getTime() - dateTime.getTime();
+        long diffSeconds = timeDifferenceMilliseconds / 1000;
+        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
+        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
+        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
+        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
+        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365);
+
+        if (diffSeconds < 1) {
+            return "one sec ago";
+        } else if (diffMinutes < 1) {
+            return diffSeconds + " seconds ago";
+        } else if (diffHours < 1) {
+            return diffMinutes + " minutes ago";
+        } else if (diffDays < 1) {
+            return diffHours + " hours ago";
+        } else if (diffWeeks < 1) {
+            return diffDays + " days ago";
+        } else if (diffMonths < 1) {
+            return diffWeeks + " weeks ago";
+        } else if (diffYears < 12) {
+            return diffMonths + " months ago";
+        } else {
+            return diffYears + " years ago";
+        }
     }
 }
 

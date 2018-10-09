@@ -140,10 +140,10 @@ public class DBConnector {
         ArrayList<Member> members = new ArrayList<>();
         if (!dbHelper.isEmpty("members")) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("select * from " + "members", null);
+            Cursor cursor = db.rawQuery("select * from " + "members" + " ORDER BY " + "lastonline" + " DESC", null);
             cursor.moveToFirst();
             members = new ArrayList<>();
-            for (int i = 0; i < cursor.getCount(); i++) {
+            for (int i = cursor.getCount() - 1; i >= 0; i--) {
                 Member m = new Member(cursor.getInt(0));
                 m.last_city = cursor.getString(3);
                 m.last_ip = cursor.getString(4);
