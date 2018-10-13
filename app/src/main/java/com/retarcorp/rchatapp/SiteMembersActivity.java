@@ -1,8 +1,5 @@
 package com.retarcorp.rchatapp;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +10,7 @@ import com.retarcorp.rchatapp.Model.Site;
 import com.retarcorp.rchatapp.Net.MemberGrabCallback;
 import com.retarcorp.rchatapp.Net.MembersWatchTask;
 import com.retarcorp.rchatapp.UI.MemberAdapter;
+import com.retarcorp.rchatapp.Utils.Network;
 
 public class SiteMembersActivity extends AppCompatActivity implements MemberGrabCallback {
 
@@ -33,11 +31,11 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
         dbConnector = new DBConnector();
         Site currentSite = new Site(siteId);
         Global.CurrentSite = currentSite;
-        setTitle(currentSite.getTitle() + " - диалоги");
+        setTitle(currentSite.getTitle() + " -" + getResources().getString(R.string.dialogs));
         adapter = new MemberAdapter(this, dbConnector.getMembers());
-        if (!isOnline()) {
-            Snackbar membersSnackbarHash = Snackbar.make(findViewById(R.id.members_layout), "Нет подключения к интернету", Snackbar.LENGTH_LONG);
-            membersSnackbarHash.show();
+        if (!Network.isConnection()) {
+            Snackbar membersHash = Snackbar.make(findViewById(R.id.members_layout), getResources().getString(R.string.have_not_connective), Snackbar.LENGTH_LONG);
+            membersHash.show();
         }
         ((ListView) findViewById(R.id.members_list)).setAdapter(adapter);
     }
@@ -75,12 +73,5 @@ public class SiteMembersActivity extends AppCompatActivity implements MemberGrab
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

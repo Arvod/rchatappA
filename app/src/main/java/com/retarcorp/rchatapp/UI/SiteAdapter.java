@@ -1,5 +1,6 @@
 package com.retarcorp.rchatapp.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,20 +21,19 @@ import com.retarcorp.rchatapp.SiteMembersActivity;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-/**
- * Created by CaptainOsmant on 10.01.2018.
- */
-
 public class SiteAdapter extends ArrayAdapter<Site> {
 
     public SiteAdapter(@NonNull Context context, ArrayList<Site> sites) {
         super(context, R.layout.site_adapter_element, sites);
     }
 
+    @NonNull
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final Site site = getItem(position);
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.site_adapter_element,null);
+        assert site != null;
         ((TextView)convertView.findViewById(R.id.sitename)).setText(site.getTitle());
 
         if(site.icon!=null) {

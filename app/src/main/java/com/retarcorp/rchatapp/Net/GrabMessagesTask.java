@@ -5,16 +5,12 @@ import android.os.AsyncTask;
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
 
-/**
- * Created by CaptainOsmant on 11.01.2018.
- */
 
 public class GrabMessagesTask extends AsyncTask<Member, Void, String> {
 
-    Site site;
-    MessagesGrabCallback callback;
+    private MessagesGrabCallback callback;
     public GrabMessagesTask(MessagesGrabCallback callback, Site site){
-        this.site = site;
+        Site site1 = site;
         this.callback = callback;
     }
 

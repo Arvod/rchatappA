@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Global.Ctx = getApplicationContext();
         setContentView(R.layout.activity_main);
-        setTitle("Мои сайты");
+        setTitle(getResources().getString(R.string.my_site));
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

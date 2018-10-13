@@ -2,8 +2,11 @@ package com.retarcorp.rchatapp.Net;
 
 import android.os.AsyncTask;
 
+import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
+import com.retarcorp.rchatapp.R;
+import com.retarcorp.rchatapp.Utils.Response;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,15 +15,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by CaptainOsmant on 12.01.2018.
- */
-
 public class SendMessageTask extends AsyncTask<String, Void, String> {
 
-    Site site;
-    Member member;
-    MessageSentCallback callback;
+    private Site site;
+    private Member member;
+    private MessageSentCallback callback;
+
     public SendMessageTask(Site site, Member member, MessageSentCallback callback){
         this.site = site;
         this.member = member;
@@ -50,7 +50,7 @@ public class SendMessageTask extends AsyncTask<String, Void, String> {
             return builder.toString();
 
         }catch (Exception e){
-            return "{\"status\":\"ERROR\",\"message\":\"Ошибка отправки сообщения!\"}";
+            return Response.getExceptionJSON(Global.Ctx.getResources().getString(R.string.send_error));
         }
     }
 

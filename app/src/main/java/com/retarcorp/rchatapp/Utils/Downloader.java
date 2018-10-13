@@ -8,10 +8,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
-
 public class Downloader {
 
     public static String download(String href) throws Exception{

@@ -11,12 +11,10 @@ import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.Model.Member;
 import com.retarcorp.rchatapp.Model.Site;
 import com.retarcorp.rchatapp.Net.RefreshTask;
+import com.retarcorp.rchatapp.R;
 import com.retarcorp.rchatapp.Utils.Notifier;
 
 import java.util.List;
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
 
 public class RefreshService extends Service implements MessageReceiver, SiteProducer {
 
@@ -80,7 +78,7 @@ public class RefreshService extends Service implements MessageReceiver, SiteProd
             intent.setClass(this, ChatActivity.class);
             intent.putExtra("member_id", userId);
             Global.CurrentMember = new Member(userId);
-            Notifier.notify("Новое сообщение с сайта " + site, text, intent);
+            Notifier.notify(getResources().getString(R.string.new_message) + site, text, intent);
         }
     }
 

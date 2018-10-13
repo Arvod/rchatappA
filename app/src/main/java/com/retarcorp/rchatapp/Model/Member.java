@@ -2,9 +2,6 @@ package com.retarcorp.rchatapp.Model;
 
 import java.util.Date;
 
-/**
- * Created by CaptainOsmant on 11.01.2018.
- */
 
 public class Member {
 

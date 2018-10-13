@@ -12,9 +12,6 @@ import com.retarcorp.rchatapp.R;
 
 import java.util.Random;
 
-/**
- * Created by CaptainOsmant on 23.01.2018.
- */
 
 public class BasicWidgetProvider extends AppWidgetProvider {
 

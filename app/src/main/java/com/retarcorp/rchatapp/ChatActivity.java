@@ -30,9 +30,9 @@ import com.retarcorp.rchatapp.Net.MessageSentCallback;
 import com.retarcorp.rchatapp.Net.MessagesGrabCallback;
 import com.retarcorp.rchatapp.Net.MessagesWatchTask;
 import com.retarcorp.rchatapp.Net.SendMessageTask;
+import com.retarcorp.rchatapp.Utils.DataWorker;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity implements MessagesGrabCallback, MessageSentCallback {
 
@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
 
         id = getIntent().getIntExtra("member_id", 0);
         if (Global.CurrentSite != null) {
-            setTitle("Диалог на " + Global.CurrentSite.getTitle());
+            setTitle(getResources().getString(R.string.dialog_on) + Global.CurrentSite.getTitle());
         }
         Global.CurrentMember = new Member(id);
         dbConnector = new DBConnector();
@@ -121,7 +121,7 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             final TextView dateText = ((TextView) viewDate.findViewById(R.id.message_date));
-            dateText.setText(getDifferenceBtwTime(m.created));
+            dateText.setText(DataWorker.getDifferenceBtwTime(m.created));
             if (m.direction == ChatMessage.Direction.ADMIN) {
                 lp.gravity = Gravity.RIGHT;
                 message_text.setBackgroundColor(Color.parseColor("#1e824c"));
@@ -136,10 +136,10 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
                 @Override
                 public void onClick(View view) {
                     switch (dateText.getVisibility()) {
-                        case 8:
+                        case View.GONE:
                             showElements(dateText);
                             break;
-                        case 0:
+                        case View.VISIBLE:
                             hideElements(dateText);
                             break;
                     }
@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
                 });
 
                 builder.setView(v);
-                builder.setPositiveButton("Закрыть", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -265,36 +265,6 @@ public class ChatActivity extends AppCompatActivity implements MessagesGrabCallb
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    public String getDifferenceBtwTime(Date dateTime) {
-
-        long timeDifferenceMilliseconds = new Date().getTime() - dateTime.getTime();
-        long diffSeconds = timeDifferenceMilliseconds / 1000;
-        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
-        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
-        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
-        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
-        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365);
-
-        if (diffSeconds < 1) {
-            return "one sec ago";
-        } else if (diffMinutes < 1) {
-            return diffSeconds + " seconds ago";
-        } else if (diffHours < 1) {
-            return diffMinutes + " minutes ago";
-        } else if (diffDays < 1) {
-            return diffHours + " hours ago";
-        } else if (diffWeeks < 1) {
-            return diffDays + " days ago";
-        } else if (diffMonths < 1) {
-            return diffWeeks + " weeks ago";
-        } else if (diffYears < 12) {
-            return diffMonths + " months ago";
-        } else {
-            return diffYears + " years ago";
-        }
     }
 }
 

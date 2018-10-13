@@ -1,5 +1,6 @@
 package com.retarcorp.rchatapp.UI;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,9 +17,6 @@ import com.retarcorp.rchatapp.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by CaptainOsmant on 11.01.2018.
- */
 
 public class MemberAdapter extends ArrayAdapter<Member> {
 
@@ -26,6 +24,7 @@ public class MemberAdapter extends ArrayAdapter<Member> {
         super(context, R.layout.member_layout, members);
     }
 
+    @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         final Member m = getItem(position);

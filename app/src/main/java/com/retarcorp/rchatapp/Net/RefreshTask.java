@@ -7,6 +7,7 @@ import com.retarcorp.rchatapp.Model.Site;
 import com.retarcorp.rchatapp.Services.MessageReceiver;
 import com.retarcorp.rchatapp.Services.MessageTick;
 import com.retarcorp.rchatapp.Services.SiteProducer;
+import com.retarcorp.rchatapp.Utils.Response;
 
 import org.json.JSONObject;
 
@@ -16,10 +17,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
 
 public class RefreshTask extends AsyncTask<Integer, String, String> {
 
@@ -48,17 +45,17 @@ public class RefreshTask extends AsyncTask<Integer, String, String> {
                     String href = site.api.getMessagesTouchURL();
                     try {
                         URL url = new URL(href);
-                        HttpURLConnection httpURLConnectionion = (HttpURLConnection) url.openConnection();
-                        BufferedReader bufferedReaderer = new BufferedReader(new InputStreamReader(httpURLConnectionion.getInputStream()));
+                        HttpURLConnection httpURLConfectionist = (HttpURLConnection) url.openConnection();
+                        BufferedReader bufferedRenderer = new BufferedReader(new InputStreamReader(httpURLConfectionist.getInputStream()));
                         StringBuilder builder = new StringBuilder();
                         String s;
-                        while ((s = bufferedReaderer.readLine()) != null) {
+                        while ((s = bufferedRenderer.readLine()) != null) {
                             builder.append(s);
                         }
-                        bufferedReaderer.close();
+                        bufferedRenderer.close();
                         messages[i] = builder.toString();
                     } catch (Exception e) {
-                        messages[i] = "{\"status\":\"ERROR\",\"message\":\"  \"}";
+                        messages[i] = Response.getExceptionJSON(" ");
                         e.printStackTrace();
                         continue;
                     }

@@ -2,16 +2,12 @@ package com.retarcorp.rchatapp.Model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.retarcorp.rchatapp.Global;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by CaptainOsmant on 10.01.2018.
- */
 
 public class Site extends Object {
 
@@ -104,8 +100,7 @@ public class Site extends Object {
         int id = (int)db.getWritableDatabase().insert("sites","",cv);
         try {
             return new Site(id);
-        }catch (Exception e){
-            Log.e(null, "Unable to add site!");
+        } catch (Exception e) {
         }
         return null;
     }

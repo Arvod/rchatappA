@@ -12,10 +12,6 @@ import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.R;
 import com.retarcorp.rchatapp.Services.SendMessageService;
 
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
-
 public class Notifier {
 
     public static void notify(String title, String text, Intent intent) {

@@ -2,15 +2,14 @@ package com.retarcorp.rchatapp.Net;
 
 import android.os.AsyncTask;
 
+import com.retarcorp.rchatapp.Global;
 import com.retarcorp.rchatapp.Model.Site;
-
-/**
- * Created by CaptainOsmant on 12.01.2018.
- */
+import com.retarcorp.rchatapp.R;
+import com.retarcorp.rchatapp.Utils.Response;
 
 public class MembersWatchTask extends AsyncTask<Site, String, String> {
     private final int delay;
-    MemberGrabCallback callback;
+    private MemberGrabCallback callback;
 
     public MembersWatchTask( MemberGrabCallback callback, int delay){
         this.delay = delay;
@@ -25,7 +24,7 @@ public class MembersWatchTask extends AsyncTask<Site, String, String> {
                 Thread.sleep(this.delay);
             } catch (Exception e) {
                 e.printStackTrace();
-                return ("{\"status\":\"ERROR\",\"message\":\"Ошибка на уровне Android-приложения\"}");
+                return Response.getExceptionJSON(Global.Ctx.getResources().getString(R.string.error_in_system));
             }
         }while(true);
     }

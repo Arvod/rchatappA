@@ -21,7 +21,7 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_site);
-        setTitle("Добавить сайт");
+        setTitle(getResources().getString(R.string.add_site));
         findViewById(R.id.addsitebtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,10 +39,10 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
         String protocol = protocols[spinner.getSelectedItemPosition()];
 
         if(Site.isSiteAlreadyExists(protocol,domain)){
-            Snackbar.make(findViewById(R.id.addsitebtn),"Невозможно добавить сайт "+protocol+"://"+domain+"! Сайт уже существует.",Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.addsitebtn), getResources().getString(R.string.impossible_to_add) + protocol + "://" + domain + "! " + getResources().getString(R.string.site_already_exists), Snackbar.LENGTH_LONG).show();
             return;
         }
-        snackbar = Snackbar.make(findViewById(R.id.addsitebtn),"Осуществляем прозвон...",Snackbar.LENGTH_INDEFINITE);
+        snackbar = Snackbar.make(findViewById(R.id.addsitebtn), getResources().getString(R.string.make_a_call), Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
         checkConnectivity(protocol, domain, key);
     }
@@ -56,7 +56,7 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
         if(!result){
             Snackbar.make(findViewById(
                     R.id.addsitebtn)
-                    ,"Не удалось осуществить прозвон! Ключ соединения неверен или система RChat на сайте недоступна."
+                    , getResources().getString(R.string.fail_a_call)
                     ,Snackbar.LENGTH_LONG).show();
             return;
         }
@@ -64,7 +64,7 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
             Site site = Site.createSite(protocol, domain, key);
             new SiteIconDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, site);
         }catch (Site.SiteAlreadyExistsException e){
-            Snackbar.make(findViewById(R.id.addsitebtn),"Невозможно добавить сайт "+protocol+"://"+domain+"! Сайт уже существует.",Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.addsitebtn), getResources().getString(R.string.impossible_to_add) + protocol + "://" + domain + "! " + getResources().getString(R.string.site_already_exists), Snackbar.LENGTH_LONG).show();
         }catch (Exception e) {
             Snackbar.make(findViewById(R.id.addsitebtn), "Unable to create site " + protocol + "://" + domain + " with key " + key + ".", Snackbar.LENGTH_LONG).show();
             e.printStackTrace();
@@ -73,6 +73,6 @@ public class AddSiteActivity extends Activity implements ConnectivityCallback {
     }
 
     public void onSiteAddedSuccessfully(){
-        Snackbar.make(findViewById(R.id.addsitebtn),"Сайт успешно добавлен!",Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.addsitebtn), getResources().getString(R.string.site_successfully_added), Snackbar.LENGTH_LONG).show();
     }
 }

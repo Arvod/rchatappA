@@ -9,10 +9,6 @@ import com.retarcorp.rchatapp.Utils.Downloader;
 
 import java.io.ByteArrayOutputStream;
 
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
-
 public class SiteIconDownloadTask extends AsyncTask<Site,Void,Site> {
 
     public SiteIconDownloadTask() {

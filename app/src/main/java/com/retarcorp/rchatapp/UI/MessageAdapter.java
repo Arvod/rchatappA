@@ -1,7 +1,6 @@
 package com.retarcorp.rchatapp.UI;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,6 @@ import com.retarcorp.rchatapp.Model.ChatMessage;
 import com.retarcorp.rchatapp.R;
 
 import java.util.ArrayList;
-
-/**
- * Created by CaptainOsmant on 11.01.2018.
- */
 
 @Deprecated
 public class MessageAdapter extends ArrayAdapter<ChatMessage> {

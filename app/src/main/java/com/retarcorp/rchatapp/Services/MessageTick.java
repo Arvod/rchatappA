@@ -4,10 +4,6 @@ import com.retarcorp.rchatapp.Model.Site;
 
 import org.json.JSONObject;
 
-/**
- * Created by CaptainOsmant on 13.01.2018.
- */
-
 public class MessageTick {
     public int uid;
     public int mid;

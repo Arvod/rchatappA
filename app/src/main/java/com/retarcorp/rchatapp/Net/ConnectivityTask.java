@@ -10,10 +10,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by CaptainOsmant on 10.01.2018.
- */
-
 public class ConnectivityTask extends AsyncTask<String, Void, Boolean> {
 
     private ConnectivityCallback callback;
